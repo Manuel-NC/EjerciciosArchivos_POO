@@ -23,7 +23,7 @@ public class ManejoFlujoCaracteres {
         return contenido.toString();
     }
 
-    // Calcular Estadisticas
+    // Calcular estadisticas
     public int[] calcularEstadisticas(File archivo) throws IOException {
         int lineas = 0;
         int palabras = 0;

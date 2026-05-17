@@ -41,7 +41,7 @@ public class BytesVista {
         stage.setTitle("Flujos de Bytes");
     }
 
-    // Cambiar a la pantalla del ejercicio 4
+    // Clonador imagenes
     public void mostrarVistaClonador() {
         VBox layout = new VBox(15);
         layout.setPadding(new Insets(20));
@@ -52,7 +52,7 @@ public class BytesVista {
         panelPrincipal.setCenter(layout);
     }
 
-    // Cambiar a la pantalla del ejercicio 5
+    // Mascara XOR
     public void mostrarVistaXOR() {
         VBox layout = new VBox(15);
         layout.setPadding(new Insets(20));
@@ -64,7 +64,7 @@ public class BytesVista {
         panelPrincipal.setCenter(layout);
     }
 
-    // Cambiar a la pantalla del ejercicio 6
+    // Identificador formato
     public void mostrarVistaIdentificador() {
         VBox layout = new VBox(15);
         layout.setPadding(new Insets(20));

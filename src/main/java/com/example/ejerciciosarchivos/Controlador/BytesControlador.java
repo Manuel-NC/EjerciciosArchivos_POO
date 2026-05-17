@@ -40,30 +40,37 @@ public class BytesControlador {
             File origen = fileChooser.showOpenDialog(stagePrincipal);
 
             if (origen != null) {
-                new Thread(() -> {
-                    File destino = new File(origen.getParent(), "copia_" + origen.getName());
-                    try (FileInputStream in = new FileInputStream(origen);
-                         FileOutputStream out = new FileOutputStream(destino)) {
+                javafx.stage.DirectoryChooser directoryChooser = new javafx.stage.DirectoryChooser();
+                directoryChooser.setTitle("Selecciona la carpeta de destino para la copia");
+                File carpetaDestino = directoryChooser.showDialog(stagePrincipal);
 
-                        long tamanoTotal = origen.length();
-                        long bytesAcumulados = 0;
-                        byte[] buffer = new byte[1024];
-                        int bytesLeidos;
+                if (carpetaDestino != null) {
 
-                        while ((bytesLeidos = in.read(buffer)) != -1) {
-                            out.write(buffer, 0, bytesLeidos);
-                            bytesAcumulados += bytesLeidos;
+                    new Thread(() -> {
+                        File destino = new File(carpetaDestino, "copia_" + origen.getName());
+                        try (FileInputStream in = new FileInputStream(origen);
+                             FileOutputStream out = new FileOutputStream(destino)) {
 
-                            double progreso = (double) bytesAcumulados / tamanoTotal;
-                            Platform.runLater(() -> vista.progressBar.setProgress(progreso));
+                            long tamanoTotal = origen.length();
+                            long bytesAcumulados = 0;
+                            byte[] buffer = new byte[1024];
+                            int bytesLeidos;
+
+                            while ((bytesLeidos = in.read(buffer)) != -1) {
+                                out.write(buffer, 0, bytesLeidos);
+                                bytesAcumulados += bytesLeidos;
+
+                                double progreso = (double) bytesAcumulados / tamanoTotal;
+                                Platform.runLater(() -> vista.progressBar.setProgress(progreso));
+                            }
+
+                            Platform.runLater(() -> new Alert(Alert.AlertType.INFORMATION, "Imagen clonada con exito!").show());
+
+                        } catch (IOException ex) {
+                            System.err.println("Error al clonar: " + ex.getMessage());
                         }
-
-                        Platform.runLater(() -> new Alert(Alert.AlertType.INFORMATION, "Imagen clonada con exito!").show());
-
-                    } catch (IOException ex) {
-                        System.err.println("Error al clonar: " + ex.getMessage());
-                    }
-                }).start();
+                    }).start();
+                }
             }
         });
 
