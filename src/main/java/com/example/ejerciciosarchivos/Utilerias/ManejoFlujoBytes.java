@@ -11,11 +11,6 @@ public class ManejoFlujoBytes {
         this.nombreArchivo = new File(nombreArchivo);
     }
 
-    public void escribirByte(int c) {
-
-
-    }
-
     // 4: Clonador de imagenes
     public void clonadorImagen(File origen, File destino) {
         try (FileInputStream in = new FileInputStream(origen);
@@ -92,9 +87,32 @@ public class ManejoFlujoBytes {
         return ochoBytes;
     }
 
+    // 5: Encriptador XOR
+    public void encriptarXOR(File origen, File destino, int clave) {
+
+        try (FileInputStream in = new FileInputStream(origen);
+             FileOutputStream out = new FileOutputStream(destino)) {
+
+            int unByte;
+            // Lee byte por byte (valor de 0 a 255)
+            while ((unByte = in.read()) != -1) {
+                // El operador ^ aplica la mascara XOR entre el byte y el numero clave
+                int byteCifrado = unByte ^ clave;
+                out.write(byteCifrado);
+            }
+            System.out.println("Cifrado/Descifrado XOR aplicado con exito.");
+
+        } catch (IOException e) {
+            // Captura las Exceptions
+            System.err.println("Error de sistema (E/S): " + e.getMessage());
+        }
+    }
+
     // 6: Identificador de Tipos
     public String verificarFormato(ArrayList<Integer> ochoBytes) {
         String formato="";
+
+        // Hacemos ArrayList de cada formato
         ArrayList<Integer> formatoPDF = new ArrayList<>();
         formatoPDF.add(Integer.parseInt("25", 16));
         formatoPDF.add(Integer.parseInt("50", 16));
@@ -108,10 +126,10 @@ public class ManejoFlujoBytes {
         formatoJPEG.add(Integer.parseInt("E0", 16));
 
         ArrayList<Integer> formatoJPEG2 = new ArrayList<>();
-        formatoJPEG.add(Integer.parseInt("FF", 16));
-        formatoJPEG.add(Integer.parseInt("D8", 16));
-        formatoJPEG.add(Integer.parseInt("FF", 16));
-        formatoJPEG.add(Integer.parseInt("E1", 16));
+        formatoJPEG2.add(Integer.parseInt("FF", 16));
+        formatoJPEG2.add(Integer.parseInt("D8", 16));
+        formatoJPEG2.add(Integer.parseInt("FF", 16));
+        formatoJPEG2.add(Integer.parseInt("E1", 16));
 
         ArrayList<Integer> formatoPNG = new ArrayList<>();
         formatoPNG.add(Integer.parseInt("89", 16));
@@ -136,11 +154,14 @@ public class ManejoFlujoBytes {
         formatoGIF.add(Integer.parseInt("49", 16));
         formatoGIF.add(Integer.parseInt("46", 16));
         formatoGIF.add(Integer.parseInt("38", 16));
+
+        // Hacemos ArrayList de los valores de ochoBytes para comparar
         ArrayList<Integer> valor = new ArrayList<>();
-        for (int i = 0 ; i < 3 ; i++) {
+        for (int i = 0 ; i < 4 ; i++) {
             valor.add(ochoBytes.get(i));
         }
 
+        // Comparamos con todos los formatos
         if (valor.equals(formatoPDF)) {
             formato = "PDF";
         } else if (valor.equals(formatoJPEG)) {
